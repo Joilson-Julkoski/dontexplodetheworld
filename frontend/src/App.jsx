@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import bg from './assets/bg.png'
 
 function App() {
   const [message, setMessage] = useState('')
@@ -28,11 +29,16 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-cover bg-center bg-no-repeat flex flex-col justify-center items-center">
-      <h1 className="text-gray-900 text-center text-4xl font-bold mb-6 tracking-wide uppercase">
+    <div className="relative min-h-screen bg-cover bg-center bg-no-repeat flex flex-col" style={{ backgroundImage: `url(${bg})` }}>
+      {/* bottom vignette */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-96 bg-gradient-to-t from-black to-transparent" />
+
+      <h1 className="mt-16 text-white text-center text-4xl font-bold tracking-wide uppercase text-shadow-lg">
         don't explode the world
       </h1>
-      <div className={`w-full max-w-2xl px-4 transition-all duration-300 ${focused ? '-translate-y-4' : ''}`}>
+
+      {/* input pinned to bottom */}
+      <div className="relative mt-auto w-full max-w-2xl mx-auto px-4 pb-8">
         <div className="flex items-end gap-2 bg-white border border-gray-200 rounded-2xl px-4 py-3 shadow-2xl">
           <textarea
             ref={textareaRef}
