@@ -163,3 +163,23 @@ exports.claimScore = onRequest({ cors: true }, async (req, res) => {
     return res.status(401).json({ error: "Unauthorized" });
   }
 });
+
+exports.getScores = onRequest({ cors: true }, async (req, res) => {
+  if (req.method !== "GET") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
+
+  const snap = await admin
+    .database()
+    .ref("scores")
+    .orderByChild("score")
+    .limitToFirst(10)
+    .once("value");
+
+  const data = snap.val() || {};
+  const scores = Object.entries(data)
+    .map(([uid, entry]) => ({ uid, ...entry }))
+    .sort((a, b) => a.score - b.score);
+
+  return res.json({ scores });
+});

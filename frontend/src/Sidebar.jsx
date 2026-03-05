@@ -8,7 +8,7 @@
 import { loginWithGoogle, loginWithGithub, logout } from './firebase'
 import { useState } from 'react'
 
-export default function Sidebar({ user, launched, scoreClaimed, c, open, onToggle }) {
+export default function Sidebar({ user, launched, scoreClaimed, scores, c, open, onToggle }) {
   const [error, setError] = useState(null)
 
   async function handleLogin(provider) {
@@ -70,6 +70,18 @@ export default function Sidebar({ user, launched, scoreClaimed, c, open, onToggl
                 )}
                 <p className={`font-mono text-${c}-400 text-sm truncate`}>{user.displayName}</p>
               </div>
+
+              {(() => {
+                const best = scores.find(s => s.uid === user.uid)
+                return best ? (
+                  <div className={`border border-${c}-900 rounded px-3 py-2`}>
+                    <p className={`font-mono text-${c}-700 text-[10px] uppercase tracking-widest`}>Best score</p>
+                    <p className={`font-mono text-${c}-300 text-lg font-bold leading-tight`}>
+                      {best.score} <span className={`text-${c}-700 text-[10px]`}>CHARS</span>
+                    </p>
+                  </div>
+                ) : null
+              })()}
 
               {scoreClaimed ? (
                 <p className={`font-mono text-${c}-500 text-xs uppercase tracking-widest`}>

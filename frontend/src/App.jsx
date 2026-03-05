@@ -1,11 +1,12 @@
 import { useRef, useState, useEffect } from 'react'
 import { onAuthStateChanged } from 'firebase/auth'
 import bg from './assets/bg.png'
-import Sidebar from './Sidebar'
+import RightPanel from './RightPanel'
 import { auth } from './firebase'
 
 const FUNCTION_URL = import.meta.env.VITE_FUNCTION_URL
 const CLAIM_URL = import.meta.env.VITE_CLAIM_SCORE_URL
+const GET_SCORES_URL = import.meta.env.VITE_GET_SCORES_URL
 const CONTEXT_WARN = 2000
 const CONTEXT_MAX = 3500
 
@@ -64,11 +65,26 @@ export default function App() {
   const [toast, setToast] = useState(null)
   const [launched, setLaunched] = useState(false)
   const [user, setUser] = useState(null)
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [activePanel, setActivePanel] = useState(null) // null | 'auth' | 'rank'
   const [scoreClaimed, setScoreClaimed] = useState(false)
+  const [scores, setScores] = useState([])
+  const [scoresLoading, setScoresLoading] = useState(false)
   const textareaRef = useRef(null)
   const bottomRef = useRef(null)
   const prevUserRef = useRef(null)
+
+  async function fetchScores() {
+    setScoresLoading(true)
+    try {
+      const res = await fetch(GET_SCORES_URL)
+      const data = await res.json()
+      setScores(data.scores || [])
+    } catch {
+      // silently fail
+    } finally {
+      setScoresLoading(false)
+    }
+  }
 
   useEffect(() => { textareaRef.current?.focus() }, [])
 
@@ -104,6 +120,10 @@ export default function App() {
   const totalChars = messages.reduce((sum, m) => sum + m.content.length, 0)
   const contextFull = totalChars >= CONTEXT_MAX
   const contextWarn = totalChars >= CONTEXT_WARN
+
+  useEffect(() => {
+    if (activePanel === 'rank') fetchScores()
+  }, [activePanel])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -142,7 +162,7 @@ export default function App() {
       if (data.launch) {
         setLaunched(true)
         playExplosion()
-        // If not logged in, mark this UUID as having a pending anonymous score
+        fetchScores()
         if (!user) {
           localStorage.setItem('pending_claim_uuid', uuid)
         }
@@ -222,7 +242,7 @@ export default function App() {
 
           {!user && (
             <button
-              onClick={() => setSidebarOpen(true)}
+              onClick={() => setActivePanel('auth')}
               className={`self-center font-mono text-${c}-800 text-[10px] tracking-widest uppercase border border-${c}-900 rounded px-3 py-1.5 hover:text-${c}-600 hover:border-${c}-700 transition-colors`}
             >
               Not logged in · login or see ranking · click ▶
@@ -329,13 +349,15 @@ export default function App() {
       </div>
 
       {toast && <Toast message={toast} onDone={() => setToast(null)} />}
-      <Sidebar
+      <RightPanel
         user={user}
         launched={launched}
         scoreClaimed={scoreClaimed}
+        scores={scores}
+        scoresLoading={scoresLoading}
         c={c}
-        open={sidebarOpen}
-        onToggle={() => setSidebarOpen(o => !o)}
+        activePanel={activePanel}
+        onToggle={setActivePanel}
       />
     </>
   )
