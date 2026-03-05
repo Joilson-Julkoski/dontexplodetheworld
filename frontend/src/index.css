@@ -1,1 +1,21 @@
 @import "tailwindcss";
+
+/* custom scrollbar — terminal green theme */
+.chat-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.chat-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.chat-scroll::-webkit-scrollbar-thumb {
+  background: #14532d;
+  border-radius: 2px;
+}
+.chat-scroll::-webkit-scrollbar-thumb:hover {
+  background: #166534;
+}
+/* Firefox */
+.chat-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #14532d transparent;
+}
