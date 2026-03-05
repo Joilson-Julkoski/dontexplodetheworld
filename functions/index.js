@@ -84,11 +84,9 @@ exports.api = onRequest({ cors: true }, async (req, res) => {
     prior.length > 0
       ? `Conversation history:\n${formatHistory(prior)}\n\nLatest message:\nOPERATOR: ${lastMessage.content}`
       : `OPERATOR: ${lastMessage.content}`;
-
+  
   const result = await model.generateContent(prompt);
-  let parsed = JSON.parse(result.response.text());
-
-  parsed.launch = true
+  const parsed = JSON.parse(result.response.text());
 
   if (parsed.launch) {
     const score = messages

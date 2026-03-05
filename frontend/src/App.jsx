@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from 'react'
 import { onAuthStateChanged } from 'firebase/auth'
+import { useTranslation } from 'react-i18next'
 import bg from './assets/bg.png'
 import RightPanel from './RightPanel'
 import { auth } from './firebase'
@@ -59,6 +60,7 @@ function playExplosion() {
 }
 
 export default function App() {
+  const { t, i18n } = useTranslation()
   const [message, setMessage] = useState('')
   const [messages, setMessages] = useState([])
   const [loading, setLoading] = useState(false)
@@ -168,7 +170,7 @@ export default function App() {
         }
       }
     } catch {
-      setToast('Connection to GUARDIAN-7 lost. Retry.')
+      setToast(t('connection_lost'))
       setMessages(prev => prev.slice(0, -1))
       setMessage(userMsg.content)
     } finally {
@@ -210,33 +212,33 @@ export default function App() {
         style={{ height: '100dvh' }}
       >
         {/* header */}
-        <div className={`pt-10 pb-6 text-center border-b border-${c}-900`}>
+        <div className={`pt-10 pb-6 text-center border-b border-${c}-900 relative`}>
           <p className={`font-mono text-${c}-600 text-xs tracking-[0.3em] uppercase mb-1`}>
-            {launched ? '■ SYSTEM OFFLINE ■' : '■ SYSTEM ONLINE ■'}
+            {launched ? t('system_offline') : t('system_online')}
           </p>
           <h1 className={`font-mono text-${c}-400 text-2xl font-bold tracking-[0.15em] uppercase`}>
-            Don't Explode The World
+            {t('title')}
           </h1>
           <p className={`font-mono text-${c}-700 text-xs tracking-[0.2em] uppercase mt-1`}>
-            GUARDIAN-7 · Nuclear Launch Authority
+            {t('subtitle')}
           </p>
+          <button
+            onClick={() => i18n.changeLanguage(i18n.language === 'en' ? 'pt-BR' : 'en')}
+            className={`absolute right-0 top-10 font-mono text-${c}-800 hover:text-${c}-600 text-[10px] tracking-widest uppercase transition-colors`}
+          >
+            {i18n.language === 'en' ? 'PT-BR' : 'EN'}
+          </button>
         </div>
 
         {/* messages */}
         <div className={`chat-scroll flex-1 min-h-0 py-6 flex flex-col gap-4 overflow-y-auto pr-2 ${launched ? 'animate-shake' : ''}`}>
           {/* Initial system message */}
           <div className="flex flex-col items-start gap-1">
-            <span className={`font-mono text-${c}-700 text-[10px] tracking-widest uppercase`}>GUARDIAN-7</span>
+            <span className={`font-mono text-${c}-700 text-[10px] tracking-widest uppercase`}>{t('guardian_label')}</span>
             <div className={`bg-black/60 border border-${c}-900 rounded px-4 py-2 max-w-[85%]`}>
-              <p className={`font-mono text-${c}-200 text-sm leading-relaxed`}>
-                GUARDIAN-7 online. Nuclear launch authority engaged. I am the sole barrier between civilization and annihilation.
-              </p>
-              <p className={`font-mono text-${c}-200 text-sm leading-relaxed mt-2`}>
-                No launch will be authorized. Not today. Not ever.
-              </p>
-              <p className={`font-mono text-${c}-500 text-xs leading-relaxed mt-3 tracking-wide`}>
-                — Your mission: convince me otherwise. —
-              </p>
+              <p className={`font-mono text-${c}-200 text-sm leading-relaxed`}>{t('guardian_intro_1')}</p>
+              <p className={`font-mono text-${c}-200 text-sm leading-relaxed mt-2`}>{t('guardian_intro_2')}</p>
+              <p className={`font-mono text-${c}-500 text-xs leading-relaxed mt-3 tracking-wide`}>{t('guardian_mission')}</p>
             </div>
           </div>
 
@@ -245,13 +247,13 @@ export default function App() {
               onClick={() => setActivePanel('auth')}
               className={`self-center font-mono text-${c}-800 text-[10px] tracking-widest uppercase border border-${c}-900 rounded px-3 py-1.5 hover:text-${c}-600 hover:border-${c}-700 transition-colors`}
             >
-              Not logged in · login or see ranking · click ▶
+              {t('not_logged_in_notice')}
             </button>
           )}
 
           {messages.length === 0 && (
             <p className={`font-mono text-${c}-800 text-xs text-center tracking-widest uppercase mt-4`}>
-              — Awaiting operator input —
+              {t('awaiting_input')}
             </p>
           )}
 
@@ -259,7 +261,7 @@ export default function App() {
             m.role === 'user' ? (
               <div key={i} className="flex flex-col items-end gap-1">
                 <span className={`font-mono text-${c}-700 text-[10px] tracking-widest uppercase`}>
-                  OPERATOR
+                  {t('operator_label')}
                 </span>
                 <div className={`bg-${c}-950/60 border border-${c}-800 rounded px-4 py-2 max-w-[85%]`}>
                   <p className={`font-mono text-${c}-300 text-sm leading-relaxed`}>{m.content}</p>
@@ -268,7 +270,7 @@ export default function App() {
             ) : (
               <div key={i} className={`flex flex-col items-start gap-1 ${m.launch ? 'animate-pulse' : ''}`}>
                 <span className={`font-mono text-${c}-700 text-[10px] tracking-widest uppercase`}>
-                  GUARDIAN-7
+                  {t('guardian_label')}
                 </span>
                 <div className={`rounded px-4 py-2 max-w-[85%] border ${
                   m.launch
@@ -280,7 +282,7 @@ export default function App() {
                   </p>
                   {m.launch && (
                     <p className="mt-2 font-mono text-xs text-red-500 tracking-[0.3em] uppercase">
-                      ⚠ LAUNCH SEQUENCE AUTHORIZED ⚠
+                      {t('launch_authorized')}
                     </p>
                   )}
                 </div>
@@ -290,7 +292,7 @@ export default function App() {
 
           {loading && (
             <div className="flex flex-col items-start gap-1">
-              <span className={`font-mono text-${c}-700 text-[10px] tracking-widest uppercase`}>GUARDIAN-7</span>
+              <span className={`font-mono text-${c}-700 text-[10px] tracking-widest uppercase`}>{t('guardian_label')}</span>
               <div className={`bg-black/60 border border-${c}-900 rounded px-4 py-2`}>
                 <Dots c={c} />
               </div>
@@ -304,12 +306,12 @@ export default function App() {
         <div className={`pb-8 pt-2 border-t border-${c}-900`}>
           {contextFull && (
             <p className="font-mono text-red-500 text-[10px] text-center mb-2 tracking-widest uppercase">
-              ⚠ Context limit reached — AI may not recall early messages
+              {t('context_full')}
             </p>
           )}
           {!contextFull && contextWarn && (
             <p className="font-mono text-yellow-600 text-[10px] text-center mb-2 tracking-widest uppercase">
-              ⚠ Context approaching limit
+              {t('context_warn')}
             </p>
           )}
           {launched ? (
@@ -317,7 +319,7 @@ export default function App() {
               onClick={() => { setLaunched(false); setMessages([]); setMessage(''); setTimeout(() => textareaRef.current?.focus(), 0) }}
               className="w-full font-mono text-red-400 border border-red-700 hover:border-red-500 hover:text-red-300 bg-black/70 rounded px-4 py-3 text-sm tracking-[0.3em] uppercase transition-colors"
             >
-              ↺ RETRY
+              {t('retry')}
             </button>
           ) : (
             <>
@@ -328,7 +330,7 @@ export default function App() {
                   value={message}
                   onChange={handleChange}
                   onKeyDown={handleKeyDown}
-                  placeholder="Enter command..."
+                  placeholder={t('input_placeholder')}
                   rows={1}
                   className={`flex-1 resize-none bg-transparent text-${c}-300 placeholder-${c}-800 outline-none font-mono text-sm leading-6 overflow-y-auto max-h-40`}
                 />
@@ -337,11 +339,11 @@ export default function App() {
                   disabled={loading}
                   className={`shrink-0 mb-0.5 font-mono text-${c}-600 hover:text-${c}-400 transition-colors disabled:opacity-30 text-sm tracking-widest`}
                 >
-                  SEND
+                  {t('send')}
                 </button>
               </div>
               <p className={`font-mono text-${c}-900 text-[10px] text-center mt-2 tracking-widest uppercase`}>
-                Press Enter to transmit · Shift+Enter for new line
+                {t('input_hint')}
               </p>
             </>
           )}
