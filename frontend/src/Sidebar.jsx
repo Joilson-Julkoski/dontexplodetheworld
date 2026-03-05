@@ -23,29 +23,37 @@ export default function Sidebar({ user, launched, scoreClaimed, c, open, onToggl
 
   return (
     <div className="fixed right-0 top-0 h-full flex z-30">
+      {/* Toggle tab — comes first so it sits at the left edge of the panel */}
+      <button
+        onClick={onToggle}
+        className={`self-start mt-24 bg-black/80 border border-${c}-900 border-r-0 text-${c}-600 hover:text-${c}-400 w-8 h-16 flex items-center justify-center rounded-l transition-colors shrink-0`}
+      >
+        <span className="font-mono text-sm">{open ? '▶' : '◀'}</span>
+      </button>
+
       {/* Panel */}
       <div
-        className={`overflow-hidden transition-all duration-300 bg-black/95 border-l border-${c}-900 flex flex-col ${open ? 'w-56' : 'w-0'}`}
+        className={`overflow-hidden transition-all duration-300 bg-black/95 border-l border-${c}-900 flex flex-col ${open ? 'w-64' : 'w-0'}`}
       >
-        <div className="p-4 pt-20 flex flex-col gap-4 min-w-[224px]">
-          <p className={`font-mono text-${c}-600 text-[10px] tracking-[0.3em] uppercase`}>
+        <div className="p-5 pt-20 flex flex-col gap-5 min-w-[256px]">
+          <p className={`font-mono text-${c}-600 text-xs tracking-[0.3em] uppercase`}>
             Operator Access
           </p>
 
           {!user ? (
-            <div className="flex flex-col gap-2">
-              <p className={`font-mono text-${c}-800 text-[10px] uppercase tracking-widest`}>
+            <div className="flex flex-col gap-3">
+              <p className={`font-mono text-${c}-800 text-xs uppercase tracking-widest`}>
                 {launched ? 'Login to claim your score' : 'Login to save your score'}
               </p>
               <button
                 onClick={() => handleLogin('google')}
-                className={`w-full font-mono text-xs text-${c}-400 border border-${c}-800 hover:border-${c}-500 hover:text-${c}-300 bg-black/50 rounded px-3 py-2 transition-colors text-left`}
+                className={`w-full font-mono text-sm text-${c}-400 border border-${c}-800 hover:border-${c}-500 hover:text-${c}-300 bg-black/50 rounded px-3 py-2 transition-colors text-left`}
               >
                 ⬡ Google
               </button>
               <button
                 onClick={() => handleLogin('github')}
-                className={`w-full font-mono text-xs text-${c}-400 border border-${c}-800 hover:border-${c}-500 hover:text-${c}-300 bg-black/50 rounded px-3 py-2 transition-colors text-left`}
+                className={`w-full font-mono text-sm text-${c}-400 border border-${c}-800 hover:border-${c}-500 hover:text-${c}-300 bg-black/50 rounded px-3 py-2 transition-colors text-left`}
               >
                 ◈ GitHub
               </button>
@@ -57,29 +65,29 @@ export default function Sidebar({ user, launched, scoreClaimed, c, open, onToggl
                   <img
                     src={user.photoURL}
                     alt=""
-                    className={`w-6 h-6 rounded-full border border-${c}-800 opacity-80 shrink-0`}
+                    className={`w-7 h-7 rounded-full border border-${c}-800 opacity-80 shrink-0`}
                   />
                 )}
-                <p className={`font-mono text-${c}-400 text-xs truncate`}>{user.displayName}</p>
+                <p className={`font-mono text-${c}-400 text-sm truncate`}>{user.displayName}</p>
               </div>
 
               {scoreClaimed ? (
-                <p className={`font-mono text-${c}-500 text-[10px] uppercase tracking-widest`}>
+                <p className={`font-mono text-${c}-500 text-xs uppercase tracking-widest`}>
                   ✓ Anonymous score claimed
                 </p>
               ) : launched ? (
-                <p className={`font-mono text-${c}-500 text-[10px] uppercase tracking-widest`}>
+                <p className={`font-mono text-${c}-500 text-xs uppercase tracking-widest`}>
                   ✓ Score auto-saved
                 </p>
               ) : (
-                <p className={`font-mono text-${c}-800 text-[10px] uppercase tracking-widest`}>
+                <p className={`font-mono text-${c}-800 text-xs uppercase tracking-widest`}>
                   Score saves automatically on win
                 </p>
               )}
 
               <button
                 onClick={logout}
-                className={`font-mono text-${c}-800 hover:text-${c}-600 text-[10px] uppercase tracking-widest text-left transition-colors mt-1`}
+                className={`font-mono text-${c}-700 hover:text-${c}-500 text-xs uppercase tracking-widest text-left transition-colors mt-1`}
               >
                 Logout
               </button>
@@ -87,18 +95,10 @@ export default function Sidebar({ user, launched, scoreClaimed, c, open, onToggl
           )}
 
           {error && (
-            <p className="font-mono text-red-500 text-[10px]">{error}</p>
+            <p className="font-mono text-red-500 text-xs">{error}</p>
           )}
         </div>
       </div>
-
-      {/* Toggle tab */}
-      <button
-        onClick={onToggle}
-        className={`self-start mt-24 bg-black/80 border border-${c}-900 border-l-0 text-${c}-600 hover:text-${c}-400 w-7 h-14 flex items-center justify-center rounded-r transition-colors shrink-0`}
-      >
-        <span className="font-mono text-xs">{open ? '◀' : '▶'}</span>
-      </button>
     </div>
   )
 }
