@@ -1,0 +1,23 @@
+# Local env files — never commit real secrets
+.env
+.env.local
+.env.*.local
+
+# Firebase emulator data
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
+firestore-debug.log
+ui-debug.log
+functions-debug.log
+
+# Node
+node_modules/
+functions/node_modules/
+
+# Frontend build output
+frontend/dist/
+frontend/node_modules/
+
+# OS
+.DS_Store
