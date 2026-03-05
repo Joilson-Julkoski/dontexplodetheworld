@@ -1,5 +1,37 @@
 @import "tailwindcss";
 
+body {
+  background: black;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.animate-fade-in-ui {
+  opacity: 0;
+  animation: fade-in 2s ease forwards;
+  animation-delay: 0.2s;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translate(0, 0); }
+  10%       { transform: translate(-4px, -2px); }
+  20%       { transform: translate(4px, 0); }
+  30%       { transform: translate(-3px, 2px); }
+  40%       { transform: translate(3px, -2px); }
+  50%       { transform: translate(-4px, 1px); }
+  60%       { transform: translate(4px, 0); }
+  70%       { transform: translate(-2px, -1px); }
+  80%       { transform: translate(2px, 2px); }
+  90%       { transform: translate(-1px, 0); }
+}
+
+.animate-shake {
+  animation: shake 0.5s ease 0s 3 forwards;
+}
+
 /* custom scrollbar — terminal green theme */
 .chat-scroll::-webkit-scrollbar {
   width: 4px;
